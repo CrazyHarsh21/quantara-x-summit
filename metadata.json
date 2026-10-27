@@ -1,0 +1,8 @@
+{
+  "name": "Quantara X Summit",
+  "description": "Quantara X Summit — Quantum & AI Conference web application featuring interactive event schedule, speaker directory, ticket passes checkout, exhibition services, gallery, FAQs, and registration.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -483,25 +483,46 @@
   if ($mobileDropdownAnchors.length) {
     $mobileDropdownAnchors.each(function () {
       const $self = $(this);
-      const $toggleBtn = $('<button aria-label="dropdown toggler"><i class="fa fa-angle-down"></i></button>');
+      const $toggleBtn = $('<button type="button" class="dropdown-toggle-btn" aria-label="dropdown toggler"><i class="fa fa-angle-down"></i></button>');
       $self.append($toggleBtn);
+      
       $toggleBtn.on("click", function (e) {
         e.preventDefault();
+        e.stopPropagation();
         $(this).toggleClass("expanded");
-        $(this).parent().toggleClass("expanded");
-        $(this).parent().parent().children("ul").slideToggle();
+        $self.toggleClass("expanded");
+        $self.parent().toggleClass("expanded");
+        $self.parent().children("ul").slideToggle(280);
+      });
+
+      $self.on("click", function (e) {
+        const href = $self.attr("href");
+        if (!href || href === "#" || href === "javascript:;" || href.trim() === "") {
+          e.preventDefault();
+          $toggleBtn.toggleClass("expanded");
+          $self.toggleClass("expanded");
+          $self.parent().toggleClass("expanded");
+          $self.parent().children("ul").slideToggle(280);
+        }
       });
     });
   }
 
-  const $mobileNavToggler = $(".mobile-nav__toggler");
-  if ($mobileNavToggler.length) {
-    $mobileNavToggler.on("click", function (e) {
-      e.preventDefault();
-      $(".mobile-nav__wrapper").toggleClass("expanded");
-      $("body").toggleClass("locked");
-    });
-  }
+  // Delegated toggler click so both main header and sticky header togglers work reliably
+  $(document).on("click", ".mobile-nav__toggler", function (e) {
+    e.preventDefault();
+    $(".mobile-nav__wrapper").toggleClass("expanded");
+    $("body").toggleClass("locked");
+  });
+
+  // Auto-close drawer when clicking on valid navigation links
+  $(document).on("click", ".mobile-nav__container a", function () {
+    const href = $(this).attr("href");
+    if (href && href !== "#" && href !== "javascript:;" && href.trim() !== "") {
+      $(".mobile-nav__wrapper").removeClass("expanded");
+      $("body").removeClass("locked");
+    }
+  });
 
   const $searchToggler = $(".search-toggler");
   if ($searchToggler.length) {
